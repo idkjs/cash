@@ -1,0 +1,302 @@
+   0  $accept : %entry% $end
+
+   1  toplevel : commands EOF
+   2           | commands AND EOF
+
+   3  commands : command_io
+   4           | command_io BAR commands
+
+   5  command_io : command LT ID GT ID
+   6             | command GT ID LT ID
+   7             | command LT ID GTGT ID
+   8             | command GTGT ID LT ID
+   9             | command LT ID
+  10             | command GT ID
+  11             | command GTGT ID
+  12             | command
+
+  13  command : ID
+  14          | ID args
+
+  15  args : atom
+  16       | atom args
+
+  17  atom : ID
+  18       | STRING
+
+  19  %entry% : '\001' toplevel
+
+state 0
+	$accept : . %entry% $end  (0)
+
+	'\001'  shift 1
+	.  error
+
+	%entry%  goto 2
+
+
+state 1
+	%entry% : '\001' . toplevel  (19)
+
+	ID  shift 3
+	.  error
+
+	toplevel  goto 4
+	commands  goto 5
+	command_io  goto 6
+	command  goto 7
+
+
+state 2
+	$accept : %entry% . $end  (0)
+
+	$end  accept
+
+
+state 3
+	command : ID .  (13)
+	command : ID . args  (14)
+
+	STRING  shift 8
+	ID  shift 9
+	BAR  reduce 13
+	LT  reduce 13
+	GT  reduce 13
+	GTGT  reduce 13
+	AND  reduce 13
+	EOF  reduce 13
+
+	args  goto 10
+	atom  goto 11
+
+
+state 4
+	%entry% : '\001' toplevel .  (19)
+
+	.  reduce 19
+
+
+state 5
+	toplevel : commands . EOF  (1)
+	toplevel : commands . AND EOF  (2)
+
+	AND  shift 12
+	EOF  shift 13
+	.  error
+
+
+state 6
+	commands : command_io .  (3)
+	commands : command_io . BAR commands  (4)
+
+	BAR  shift 14
+	AND  reduce 3
+	EOF  reduce 3
+
+
+state 7
+	command_io : command . LT ID GT ID  (5)
+	command_io : command . GT ID LT ID  (6)
+	command_io : command . LT ID GTGT ID  (7)
+	command_io : command . GTGT ID LT ID  (8)
+	command_io : command . LT ID  (9)
+	command_io : command . GT ID  (10)
+	command_io : command . GTGT ID  (11)
+	command_io : command .  (12)
+
+	LT  shift 15
+	GT  shift 16
+	GTGT  shift 17
+	BAR  reduce 12
+	AND  reduce 12
+	EOF  reduce 12
+
+
+state 8
+	atom : STRING .  (18)
+
+	.  reduce 18
+
+
+state 9
+	atom : ID .  (17)
+
+	.  reduce 17
+
+
+state 10
+	command : ID args .  (14)
+
+	.  reduce 14
+
+
+state 11
+	args : atom .  (15)
+	args : atom . args  (16)
+
+	STRING  shift 8
+	ID  shift 9
+	BAR  reduce 15
+	LT  reduce 15
+	GT  reduce 15
+	GTGT  reduce 15
+	AND  reduce 15
+	EOF  reduce 15
+
+	args  goto 18
+	atom  goto 11
+
+
+state 12
+	toplevel : commands AND . EOF  (2)
+
+	EOF  shift 19
+	.  error
+
+
+state 13
+	toplevel : commands EOF .  (1)
+
+	.  reduce 1
+
+
+state 14
+	commands : command_io BAR . commands  (4)
+
+	ID  shift 3
+	.  error
+
+	commands  goto 20
+	command_io  goto 6
+	command  goto 7
+
+
+state 15
+	command_io : command LT . ID GT ID  (5)
+	command_io : command LT . ID GTGT ID  (7)
+	command_io : command LT . ID  (9)
+
+	ID  shift 21
+	.  error
+
+
+state 16
+	command_io : command GT . ID LT ID  (6)
+	command_io : command GT . ID  (10)
+
+	ID  shift 22
+	.  error
+
+
+state 17
+	command_io : command GTGT . ID LT ID  (8)
+	command_io : command GTGT . ID  (11)
+
+	ID  shift 23
+	.  error
+
+
+state 18
+	args : atom args .  (16)
+
+	.  reduce 16
+
+
+state 19
+	toplevel : commands AND EOF .  (2)
+
+	.  reduce 2
+
+
+state 20
+	commands : command_io BAR commands .  (4)
+
+	.  reduce 4
+
+
+state 21
+	command_io : command LT ID . GT ID  (5)
+	command_io : command LT ID . GTGT ID  (7)
+	command_io : command LT ID .  (9)
+
+	GT  shift 24
+	GTGT  shift 25
+	BAR  reduce 9
+	AND  reduce 9
+	EOF  reduce 9
+
+
+state 22
+	command_io : command GT ID . LT ID  (6)
+	command_io : command GT ID .  (10)
+
+	LT  shift 26
+	BAR  reduce 10
+	AND  reduce 10
+	EOF  reduce 10
+
+
+state 23
+	command_io : command GTGT ID . LT ID  (8)
+	command_io : command GTGT ID .  (11)
+
+	LT  shift 27
+	BAR  reduce 11
+	AND  reduce 11
+	EOF  reduce 11
+
+
+state 24
+	command_io : command LT ID GT . ID  (5)
+
+	ID  shift 28
+	.  error
+
+
+state 25
+	command_io : command LT ID GTGT . ID  (7)
+
+	ID  shift 29
+	.  error
+
+
+state 26
+	command_io : command GT ID LT . ID  (6)
+
+	ID  shift 30
+	.  error
+
+
+state 27
+	command_io : command GTGT ID LT . ID  (8)
+
+	ID  shift 31
+	.  error
+
+
+state 28
+	command_io : command LT ID GT ID .  (5)
+
+	.  reduce 5
+
+
+state 29
+	command_io : command LT ID GTGT ID .  (7)
+
+	.  reduce 7
+
+
+state 30
+	command_io : command GT ID LT ID .  (6)
+
+	.  reduce 6
+
+
+state 31
+	command_io : command GTGT ID LT ID .  (8)
+
+	.  reduce 8
+
+
+11 terminals, 8 nonterminals
+20 grammar rules, 32 states
