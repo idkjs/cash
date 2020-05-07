@@ -39,4 +39,6 @@ _build.prev/
 node_modules/
 
 # End of https://www.gitignore.io/api/ocaml
-n
+n[master 923d1a7] gi
+ 1 file changed, 42 insertions(+)
+ create mode 100644 .gitignore
